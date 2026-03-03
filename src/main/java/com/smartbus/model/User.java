@@ -27,6 +27,10 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
+    public User(Long userId) {
+        this.id = userId;
+    }
+
     public Long getId() {
         return id;
     }
