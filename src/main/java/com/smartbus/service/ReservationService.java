@@ -91,5 +91,10 @@ public class ReservationService {
        backgroundTaskService.sendAsyncNotification("Your reservation has been cancelled.",
                reservation.getUser().getEmail());
     }
+
+    public Reservation getReservationById(Long id) {
+
+        return reservationRepository.findById(id).orElseThrow(()->new RuntimeException("Reservation not found"));
     }
+}
 

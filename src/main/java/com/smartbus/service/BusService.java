@@ -37,7 +37,7 @@ public class BusService {
     }
 
 
-    public List<Bus> routeDateFilter(String source, String destination, LocalDate date)
+    private List<Bus> routeDateFilter(String source, String destination, LocalDate date)
     {
 
         return  busRepository.findAll().stream().filter(bus->bus.getRoute()!=null)
@@ -47,16 +47,21 @@ public class BusService {
 
     }
 
-    public List<BusSearchResponseDTO> mapToDTO(List<Bus> buses)
+    private List<BusSearchResponseDTO> mapToDTO(List<Bus> buses)
     {
         return buses.stream().map(bus ->
                 new BusSearchResponseDTO(bus.getId(),bus.getBusNumber(),bus.getOperatorName(),
                         bus.getDepartureTime(),bus.getArrivalTime(),bus.getPrice())).collect(Collectors.toList());
     }
 
-    public Map<String,List<Bus>> groupByOperator()
+    private Map<String,List<Bus>> groupByOperator()
     {
         return busRepository.findAll().stream().
                 collect(Collectors.groupingBy(Bus::getOperatorName));
+    }
+
+    public List<BusSearchResponseDTO> searchBuses(String source, String destination,
+                                                  LocalDate journeyDate) {
+        return mapToDTO(routeDateFilter(source,destination,journeyDate));
     }
 }
