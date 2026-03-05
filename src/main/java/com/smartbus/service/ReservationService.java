@@ -1,5 +1,7 @@
 package com.smartbus.service;
 
+import com.smartbus.exceptions.ResourceNotFoundException;
+import com.smartbus.exceptions.SeatAlreadyBookedException;
 import com.smartbus.model.*;
 import com.smartbus.repository.BusRepository;
 import com.smartbus.repository.ReservationRepository;
@@ -36,11 +38,11 @@ public class ReservationService {
     public Reservation reserveSeat(Long busId, Long seatId, Long userId, LocalDate journeyDate)
     {
         Bus bus = busRepository.findById(busId).
-                orElseThrow(()->new RuntimeException("Bus not found"));
+                orElseThrow(()->new ResourceNotFoundException("Bus not found"));
         Seat seat = seatRepository.findById(seatId).
-                orElseThrow(()->new RuntimeException("Seat not found"));
+                orElseThrow(()->new ResourceNotFoundException("Seat not found"));
         User user = userRepository.findById(userId).
-                orElseThrow(()-> new RuntimeException("User not found"));
+                orElseThrow(()-> new ResourceNotFoundException("User not found"));
          validateSeatAvailability(seat,journeyDate);
          //seat.setBooked(true);
          Reservation reservation = new Reservation();
@@ -62,28 +64,36 @@ public class ReservationService {
         {
             reservation.setStatus(ReservationStatus.BOOKED);
             seat.setBooked(true);
+            backgroundTaskService.sendAsyncNotification(
+                    "Payment successful! Your seat is booked.",
+                    user.getEmail()
+            );
         }
         else
         {
             reservation.setStatus(ReservationStatus.PAYMENT_FAILED);
             seat.setBooked(false);
+            backgroundTaskService.sendAsyncNotification(
+                    "Payment failed. Your seat has been released.",
+                    user.getEmail());
+
         }
         return reservationRepository.save(reservation);
     }
 
     private void validateSeatAvailability(Seat seat, LocalDate date) {
         if (Boolean.TRUE.equals(seat.getBooked())) {
-            throw new RuntimeException("Seat already booked");
+            throw new SeatAlreadyBookedException("Seat already booked");
         }
         boolean exists = reservationRepository.existsBySeatIdAndJourneyDate(seat.getId(), date);
         if (exists) {
-            throw new RuntimeException("Seat already reserved for this date");
+            throw new SeatAlreadyBookedException("Seat already reserved for this date");
         }
     }
     public void cancelReservation(Long reservationId)
     {
        Reservation reservation = reservationRepository.findById(reservationId).
-               orElseThrow(()->new RuntimeException("Reservation not found"));
+               orElseThrow(()->new ResourceNotFoundException("Reservation not found"));
        Seat seat =  reservation.getSeat();
        seat.setBooked(false);
        reservation.setStatus(ReservationStatus.CANCELLED);
@@ -94,7 +104,7 @@ public class ReservationService {
 
     public Reservation getReservationById(Long id) {
 
-        return reservationRepository.findById(id).orElseThrow(()->new RuntimeException("Reservation not found"));
+        return reservationRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Reservation not found"));
     }
 }
 
