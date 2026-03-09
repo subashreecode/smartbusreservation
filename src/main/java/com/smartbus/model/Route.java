@@ -1,9 +1,8 @@
 package com.smartbus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
-
-import java.time.Duration;
 import java.util.List;
 
 /*
@@ -19,12 +18,13 @@ public class Route {
     private String source;
     private String destination;
     private Double distanceKm;
-    private Duration travelTime;
+    private Integer travelTime;
 
     private Boolean active;
 
     @OneToMany(mappedBy = "route",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Bus> bus;
+    @JsonManagedReference
+    private List<Bus> buses;
 
     public Long getId() {
         return id;
@@ -58,11 +58,11 @@ public class Route {
         this.distanceKm = distanceKm;
     }
 
-    public Duration getTravelTime() {
+    public Integer getTravelTime() {
         return travelTime;
     }
 
-    public void setTravelTime(Duration travelTime) {
+    public void setTravelTime(Integer travelTime) {
         this.travelTime = travelTime;
     }
 
@@ -75,10 +75,10 @@ public class Route {
     }
 
     public List<Bus> getBus() {
-        return bus;
+        return buses;
     }
 
     public void setBus(List<Bus> bus) {
-        this.bus = bus;
+        this.buses = bus;
     }
 }

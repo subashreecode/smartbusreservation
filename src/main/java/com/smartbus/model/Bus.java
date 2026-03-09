@@ -1,5 +1,6 @@
 package com.smartbus.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
@@ -27,6 +28,7 @@ public class Bus implements Comparable<Bus>{
     private Double rating;
     //many to one
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="route_id")
     private Route route;
     //one to many

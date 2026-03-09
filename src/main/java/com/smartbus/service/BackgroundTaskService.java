@@ -3,11 +3,13 @@ package com.smartbus.service;
 import com.smartbus.model.Reservation;
 import com.smartbus.model.ReservationStatus;
 import com.smartbus.model.Seat;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+@Service
 public class BackgroundTaskService {
 
     Logger logger = Logger.getLogger(BackgroundTaskService.class.getName());

@@ -1,5 +1,6 @@
 package com.smartbus.controller;
 
+import com.smartbus.dto.ReservationResponseDTO;
 import com.smartbus.model.Reservation;
 import com.smartbus.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,10 @@ public class ReservationController {
 
 
     @PostMapping("/reserve")
-    public Reservation reserveSeat(@RequestParam Long busId,
-                                   @RequestParam Long seatId,
-                                   @RequestParam Long userId,
-                                   @RequestParam LocalDate journeyDate)
+    public ReservationResponseDTO reserveSeat(@RequestParam Long busId,
+                                              @RequestParam Long seatId,
+                                              @RequestParam Long userId,
+                                              @RequestParam LocalDate journeyDate)
     {
        return reservationService.reserveSeat(busId, seatId, userId, journeyDate);
     }

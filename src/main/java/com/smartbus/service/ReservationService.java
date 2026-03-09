@@ -1,5 +1,6 @@
 package com.smartbus.service;
 
+import com.smartbus.dto.ReservationResponseDTO;
 import com.smartbus.exceptions.ResourceNotFoundException;
 import com.smartbus.exceptions.SeatAlreadyBookedException;
 import com.smartbus.model.*;
@@ -33,9 +34,12 @@ public class ReservationService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DtoMapper dtoMapper;
 
 
-    public Reservation reserveSeat(Long busId, Long seatId, Long userId, LocalDate journeyDate)
+
+    public ReservationResponseDTO reserveSeat(Long busId, Long seatId, Long userId, LocalDate journeyDate)
     {
         Bus bus = busRepository.findById(busId).
                 orElseThrow(()->new ResourceNotFoundException("Bus not found"));
@@ -48,7 +52,7 @@ public class ReservationService {
          Reservation reservation = new Reservation();
          reservation.setBus(bus);
          reservation.setSeat(seat);
-         reservation.setUser(new User(userId));
+         reservation.setUser(user);
          reservation.setJourneyDate(journeyDate);
          reservation.setBookingTime(LocalDateTime.now());
          reservation.setStatus(ReservationStatus.PAYMENT_PENDING);
@@ -78,7 +82,7 @@ public class ReservationService {
                     user.getEmail());
 
         }
-        return reservationRepository.save(reservation);
+        return dtoMapper.toReservationDTO(reservationRepository.save(reservation));
     }
 
     private void validateSeatAvailability(Seat seat, LocalDate date) {

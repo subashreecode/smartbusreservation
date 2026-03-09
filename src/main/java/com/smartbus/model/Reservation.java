@@ -1,7 +1,9 @@
 package com.smartbus.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class Reservation {
     @OneToOne
     @JoinColumn(name="seat_id")
     private Seat seat;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate journeyDate;
     private LocalDateTime bookingTime;
 

@@ -1,7 +1,7 @@
 package com.smartbus.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +29,9 @@ public class User {
 
     public User(Long userId) {
         this.id = userId;
+    }
+
+    public User() {
     }
 
     public Long getId() {

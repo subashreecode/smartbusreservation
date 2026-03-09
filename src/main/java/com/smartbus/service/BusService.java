@@ -62,6 +62,7 @@ public class BusService {
 
     public List<BusSearchResponseDTO> searchBuses(String source, String destination,
                                                   LocalDate journeyDate) {
-        return mapToDTO(routeDateFilter(source,destination,journeyDate));
+        List<Bus> buses= routeDateFilter(source,destination,journeyDate);
+        return mapToDTO(buses);
     }
 }

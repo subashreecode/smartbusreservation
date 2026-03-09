@@ -1,16 +1,28 @@
 spring:
-    jpa:
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
-    cloud:
-      config:
-        enabled: false
-    application:
-      name: smartbusreservation
+  application:
+    name: smartbusreservation
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/smartbus?createDatabaseIfNotExist=true
+    username: root
+    password: JavaDB
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
+  cloud:
+    config:
+      enabled: false
+
 server:
   port: 8081
+
 springdoc:
   swagger-ui:
     path: /swagger-ui-index.html
